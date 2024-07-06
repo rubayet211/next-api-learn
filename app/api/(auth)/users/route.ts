@@ -11,10 +11,11 @@ export const GET = async () => {
     await connect();
     const users = await User.find();
     return new NextResponse(JSON.stringify(users), { status: 200 });
-  } catch (error: any) {}
-  return new NextResponse("Error in fetching Users" + error.message, {
-    status: 500,
-  });
+  } catch (error: any) {
+    return new NextResponse("Error in fetching Users" + error.message, {
+      status: 500,
+    });
+  }
 };
 
 export const POST = async (request: Request) => {
