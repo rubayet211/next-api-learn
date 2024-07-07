@@ -73,7 +73,7 @@ export const GET = async (request: Request) => {
       };
     }
 
-    const blogs = await Blog.find(filter);
+    const blogs = await Blog.find(filter).sort({ createdAt: "asc" });
 
     return new NextResponse(JSON.stringify({ blogs }), {
       status: 200,
