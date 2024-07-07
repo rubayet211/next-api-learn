@@ -68,7 +68,7 @@ export const POST = async (request: Request) => {
 
     return new NextResponse(
       JSON.stringify({
-        message: "Error in creating category",
+        message: "Category is created",
         category: newCategory,
       }),
       { status: 201 }
