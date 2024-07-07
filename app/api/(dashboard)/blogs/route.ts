@@ -10,6 +10,7 @@ export const GET = async (request: Request) => {
     const { searchParams } = new URL(request.url);
     const userId = searchParams.get("userId");
     const categoryId = searchParams.get("categoryId");
+    const searchKeywords = searchParams.get("keywords") as string;
 
     if (!userId || !Types.ObjectId.isValid(userId)) {
       return new NextResponse("Invalid user id", {
@@ -39,10 +40,21 @@ export const GET = async (request: Request) => {
       });
     }
 
-    const filter = {
+    const filter: any = {
       user: new Types.ObjectId(userId),
       category: new Types.ObjectId(categoryId),
     };
+
+    if (searchKeywords) {
+      filter.$or = [
+        {
+          title: { $regex: searchKeywords, $options: "i" },
+        },
+        {
+          content: { $regex: searchKeywords, $options: "i" },
+        },
+      ];
+    }
 
     const blogs = await Blog.find(filter);
 
