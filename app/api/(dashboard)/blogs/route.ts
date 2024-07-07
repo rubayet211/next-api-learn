@@ -11,6 +11,8 @@ export const GET = async (request: Request) => {
     const userId = searchParams.get("userId");
     const categoryId = searchParams.get("categoryId");
     const searchKeywords = searchParams.get("keywords") as string;
+    const startDate = searchParams.get("startDate");
+    const endDate = searchParams.get("endDate");
 
     if (!userId || !Types.ObjectId.isValid(userId)) {
       return new NextResponse("Invalid user id", {
@@ -54,6 +56,21 @@ export const GET = async (request: Request) => {
           content: { $regex: searchKeywords, $options: "i" },
         },
       ];
+    }
+
+    if (startDate && endDate) {
+      filter.createdAt = {
+        $gte: new Date(startDate),
+        $lte: new Date(endDate),
+      };
+    } else if (startDate) {
+      filter.createdAt = {
+        $gte: new Date(startDate),
+      };
+    } else if (endDate) {
+      filter.createdAt = {
+        $lte: new Date(endDate),
+      };
     }
 
     const blogs = await Blog.find(filter);
